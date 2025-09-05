@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="notification-card">
+      <% if (sender.avatar) { %>
+      <img src="<%= sender.avatar %>" alt="Avatar" class="avatar" />
+      <% } else { %>
+      <div class="avatar-placeholder">
+        <%= sender.username[0].toUpperCase() %>
+      </div>
+      <% } %>
+      <div class="notification-content">
+        <p class="sender"><%= sender.username %></p>
+        <p>liked your post.</p>
+        <% if (link) { %>
+        <a href="<%= link %>" class="link">View Post</a>
+        <% } %>
+        <p class="time"><%= new Date(createdAt).toLocaleString() %></p>
+      </div>
+    </div>
+
+    <style>
+      .notification-card {
+        display: flex;
+        align-items: flex-start;
+        background-color: #feffff;
+        border: 1px solid #ff3c02;
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .avatar,
+      .avatar-placeholder {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+      }
+
+      .avatar-placeholder {
+        background-color: #ff3c02;
+        color: #feffff;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .notification-content {
+        margin-left: 12px;
+        flex: 1;
+      }
+
+      .sender {
+        font-weight: bold;
+        color: #ff3c02;
+      }
+
+      .link {
+        color: #ff3c02;
+        text-decoration: none;
+        font-size: 0.875rem;
+      }
+
+      .link:hover {
+        text-decoration: underline;
+      }
+
+      .time {
+        font-size: 0.75rem;
+        color: #999;
+        margin-top: 4px;
+      }
+    </style>
+  </body>
+</html>
