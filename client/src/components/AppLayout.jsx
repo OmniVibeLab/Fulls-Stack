@@ -19,39 +19,30 @@ import {
 import authService from "../services/authService";
 import { toast } from 'react-hot-toast';
 
-// Create Post Modal Component
+// Create Post Modal
 const CreatePostModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4">
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
-          onClick={onClose}
-        ></div>
-        <div className="relative bg-white rounded-lg max-w-lg w-full p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Create Post</h2>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-              <X size={24} />
-            </button>
-          </div>
-          <div className="space-y-4">
-            <textarea
-              className="w-full h-32 p-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="What's on your mind?"
-            ></textarea>
-            <div className="flex items-center space-x-4">
-              <button className="flex items-center space-x-2 text-gray-600 hover:text-blue-500">
-                <Image size={20} />
-                <span>Add Photo</span>
-              </button>
-            </div>
-            <button className="w-full bg-blue-500 text-white rounded-lg py-2 hover:bg-blue-600 transition-colors">
-              Post
-            </button>
-          </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div className="relative bg-white rounded-lg max-w-lg w-full p-6 shadow-lg">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Create Post</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <X size={24} />
+          </button>
+        </div>
+        <textarea
+          className="w-full h-32 p-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"
+          placeholder="What's on your mind?"
+        />
+        <div className="flex justify-between items-center">
+          <button className="flex items-center space-x-2 text-gray-600 hover:text-blue-500">
+            <Image size={20} /> <span>Add Photo</span>
+          </button>
+          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition">
+            Post
+          </button>
         </div>
       </div>
     </div>
@@ -64,7 +55,6 @@ const AppLayout = () => {
   const [user, setUser] = useState(null);
   const [showCreatePost, setShowCreatePost] = useState(false);
 
-  // Load user on mount
   useEffect(() => {
     const userData = authService.getCurrentUser();
     if (!userData) {
@@ -87,7 +77,7 @@ const AppLayout = () => {
     { name: "Messages", href: "/chat", icon: MessageCircle },
     { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Create", href: "#", icon: PlusSquare, onClick: () => setShowCreatePost(true) },
-    { name: "Profile", href: `/profile/${user?.username || ''}`, icon: User },
+    { name: "Profile", href: `/profile/${user?.username}`, icon: User },
   ];
 
   const secondaryNav = [
@@ -95,16 +85,16 @@ const AppLayout = () => {
     { name: "Settings", href: "/settings", icon: Settings },
   ];
 
-  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path);
+  const isActive = (path) =>
+    location.pathname === path || location.pathname.startsWith(path);
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Create Post Modal */}
+      {/* Modal */}
       <CreatePostModal isOpen={showCreatePost} onClose={() => setShowCreatePost(false)} />
 
       {/* Sidebar */}
       <div className="hidden sm:flex w-64 bg-white border-r flex-col">
-        {/* Logo */}
         <div className="p-6">
           <Link to="/" className="flex items-center">
             <img src={Logo} alt="Logo" className="w-8 h-8 rounded-md" />
@@ -112,18 +102,12 @@ const AppLayout = () => {
           </Link>
         </div>
 
-        {/* Main Navigation */}
         <nav className="flex-1 px-4 space-y-1">
           {navigation.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              onClick={(e) => {
-                if (item.onClick) {
-                  e.preventDefault();
-                  item.onClick();
-                }
-              }}
+              onClick={(e) => item.onClick && (e.preventDefault(), item.onClick())}
               className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                 isActive(item.href)
                   ? "bg-blue-50 text-blue-600"
@@ -136,8 +120,7 @@ const AppLayout = () => {
           ))}
         </nav>
 
-        {/* Secondary Navigation + Logout */}
-        <div className="px-4 py-4 space-y-1">
+        <div className="px-4 py-4 space-y-1 border-t">
           {secondaryNav.map((item) => (
             <Link
               key={item.name}
@@ -153,39 +136,31 @@ const AppLayout = () => {
             </Link>
           ))}
 
-          <div className="mt-4 pt-4 border-t">
-            <div className="flex items-center px-4 py-3">
-              <img
-                src={user?.avatar || 'https://via.placeholder.com/32'}
-                alt="Profile"
-                className="w-8 h-8 rounded-full"
-              />
-              <div className="ml-3">
-                <p className="text-sm font-medium text-gray-900">{user?.fullName || 'User'}</p>
-                <p className="text-xs text-gray-500">@{user?.username || 'username'}</p>
-              </div>
+          <div className="mt-4 flex items-center space-x-3">
+            <img
+              src={user?.avatar || "https://via.placeholder.com/32"}
+              alt="Profile"
+              className="w-8 h-8 rounded-full"
+            />
+            <div>
+              <p className="text-sm font-medium text-gray-900">{user?.fullName}</p>
+              <p className="text-xs text-gray-500">@{user?.username}</p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-            >
-              <LogOut size={20} className="mr-3" />
-              Logout
+            <button onClick={handleLogout} className="ml-auto text-red-600 hover:text-red-800">
+              <LogOut size={20} />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navbar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t sm:hidden">
         <nav className="flex justify-around p-2">
           {navigation.slice(0, 5).map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              className={`p-2 text-center ${
-                isActive(item.href) ? "text-blue-600" : "text-gray-500"
-              }`}
+              className={`${isActive(item.href) ? "text-blue-600" : "text-gray-500"}`}
             >
               <item.icon size={24} />
             </Link>
@@ -193,31 +168,25 @@ const AppLayout = () => {
         </nav>
       </div>
 
-      {/* Main Content */}
+      {/* Main content */}
       <div className="flex-1 flex flex-col">
-        <header className="bg-white shadow-sm sticky top-0 z-30">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <h1 className="text-xl font-semibold text-gray-900">
-                {navigation.find(item => isActive(item.href))?.name || 'Home'}
-              </h1>
-              <div className="flex items-center space-x-4 sm:hidden">
-                <button className="p-2 text-gray-500 hover:text-gray-700" onClick={() => setShowCreatePost(true)}>
-                  <PlusSquare size={20} />
-                </button>
-                <button className="p-2 text-gray-500 hover:text-gray-700">
-                  <Bell size={20} />
-                </button>
-                <button className="p-2 text-gray-500 hover:text-gray-700">
-                  <MessageCircle size={20} />
-                </button>
-              </div>
+        <header className="bg-white shadow sticky top-0 z-30">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 className="text-xl font-semibold text-gray-900">
+              {navigation.find((item) => isActive(item.href))?.name || "Home"}
+            </h1>
+            <div className="flex items-center sm:hidden space-x-2">
+              <button onClick={() => setShowCreatePost(true)} className="text-gray-500">
+                <PlusSquare size={20} />
+              </button>
+              <Bell size={20} className="text-gray-500" />
+              <MessageCircle size={20} className="text-gray-500" />
             </div>
           </div>
         </header>
 
         <main className="flex-1 overflow-auto">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
             <Outlet />
           </div>
         </main>
