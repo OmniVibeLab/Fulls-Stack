@@ -13,20 +13,23 @@ import {
   PlusSquare,
   Bookmark,
   LogOut,
-  Users,
   Image,
   X
 } from "lucide-react";
 import authService from "../services/authService";
 import { toast } from 'react-hot-toast';
 
+// Create Post Modal Component
 const CreatePostModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4">
-        <div className="fixed inset-0 bg-black bg-opacity-50 transition-opacity" onClick={onClose}></div>
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+          onClick={onClose}
+        ></div>
         <div className="relative bg-white rounded-lg max-w-lg w-full p-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold">Create Post</h2>
@@ -61,6 +64,7 @@ const AppLayout = () => {
   const [user, setUser] = useState(null);
   const [showCreatePost, setShowCreatePost] = useState(false);
 
+  // Load user on mount
   useEffect(() => {
     const userData = authService.getCurrentUser();
     if (!userData) {
@@ -77,26 +81,21 @@ const AppLayout = () => {
   };
 
   const navigation = [
-    { name: "Home", href: "/app", icon: Home },
-    { name: "Search", href: "/app/search", icon: Search },
-    { name: "Explore", href: "/app/explore", icon: Compass },
-    { name: "Messages", href: "/app/chat", icon: MessageCircle },
-    { name: "Notifications", href: "/app/notifications", icon: Bell },
+    { name: "Home", href: "/", icon: Home },
+    { name: "Search", href: "/search", icon: Search },
+    { name: "Explore", href: "/explore", icon: Compass },
+    { name: "Messages", href: "/chat", icon: MessageCircle },
+    { name: "Notifications", href: "/notifications", icon: Bell },
     { name: "Create", href: "#", icon: PlusSquare, onClick: () => setShowCreatePost(true) },
-    { name: "Profile", href: "/app/profile", icon: User },
+    { name: "Profile", href: `/profile/${user?.username || ''}`, icon: User },
   ];
 
   const secondaryNav = [
-    { name: "Saved", href: "/app/saved", icon: Bookmark },
-    { name: "Settings", href: "/app/settings", icon: Settings },
+    { name: "Saved", href: "/saved", icon: Bookmark },
+    { name: "Settings", href: "/settings", icon: Settings },
   ];
 
-  const isActive = (path) => {
-    if (path === '/app') {
-      return location.pathname === path;
-    }
-    return location.pathname.startsWith(path);
-  };
+  const isActive = (path) => location.pathname === path || location.pathname.startsWith(path);
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -107,7 +106,7 @@ const AppLayout = () => {
       <div className="hidden sm:flex w-64 bg-white border-r flex-col">
         {/* Logo */}
         <div className="p-6">
-          <Link to="/app" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <img src={Logo} alt="Logo" className="w-8 h-8 rounded-md" />
             <span className="ml-2 text-xl font-bold text-gray-900">Social App</span>
           </Link>
@@ -137,7 +136,7 @@ const AppLayout = () => {
           ))}
         </nav>
 
-        {/* Secondary Navigation */}
+        {/* Secondary Navigation + Logout */}
         <div className="px-4 py-4 space-y-1">
           {secondaryNav.map((item) => (
             <Link
@@ -153,8 +152,7 @@ const AppLayout = () => {
               {item.name}
             </Link>
           ))}
-          
-          {/* User Profile */}
+
           <div className="mt-4 pt-4 border-t">
             <div className="flex items-center px-4 py-3">
               <img
@@ -197,24 +195,20 @@ const AppLayout = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
         <header className="bg-white shadow-sm sticky top-0 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-4">
               <h1 className="text-xl font-semibold text-gray-900">
                 {navigation.find(item => isActive(item.href))?.name || 'Home'}
               </h1>
-              <div className="flex items-center space-x-4">
-                <button 
-                  className="p-2 text-gray-500 hover:text-gray-700 sm:hidden"
-                  onClick={() => setShowCreatePost(true)}
-                >
+              <div className="flex items-center space-x-4 sm:hidden">
+                <button className="p-2 text-gray-500 hover:text-gray-700" onClick={() => setShowCreatePost(true)}>
                   <PlusSquare size={20} />
                 </button>
-                <button className="p-2 text-gray-500 hover:text-gray-700 sm:hidden">
+                <button className="p-2 text-gray-500 hover:text-gray-700">
                   <Bell size={20} />
                 </button>
-                <button className="p-2 text-gray-500 hover:text-gray-700 sm:hidden">
+                <button className="p-2 text-gray-500 hover:text-gray-700">
                   <MessageCircle size={20} />
                 </button>
               </div>
@@ -222,7 +216,6 @@ const AppLayout = () => {
           </div>
         </header>
 
-        {/* Page Content */}
         <main className="flex-1 overflow-auto">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Outlet />

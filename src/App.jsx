@@ -31,43 +31,41 @@ import Recomended from "./components/Recomended";
 
 function App() {
   return (
-    <>
-      <Router>
-        <Routes>
-          {/* All routes that use AppLayout (with sidebar/navbar) */}
-          <Route path="/" element={<AppLayout />}>
-            <Route index element={<Home />} />
-            <Route path="profile/:username" element={<Profile />} />
-            <Route path="saved" element={<Saved />} />
-            <Route path="search" element={<Search />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="userpost/:id" element={<UserPost />} />
-            <Route path="explore" element={<Explore />} />
-            <Route path="notifications" element={<Notifications />} />
-            <Route path="messages" element={<Messages />} />
-            <Route path="createpost" element={<CreatePost />} />
-            <Route path="editprofile" element={<EditProfile />} />
-            <Route path="chat" element={<Chat />} />
+    <Router>
+      <Routes>
+        {/* Routes using AppLayout */}
+        <Route path="/" element={<AppLayout />}>
+          <Route index element={<Home />} />
+          <Route path="/profile/:username" element={<Profile />} />
+          <Route path="/saved" element={<Saved />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/userpost/:id" element={<UserPost />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/createpost" element={<CreatePost />} />
+          <Route path="/editprofile" element={<EditProfile />} />
+          <Route path="/chat" element={<Chat />} />
 
-            {/* Optional component routes (if you want standalone access) */}
-            <Route path="postcreator" element={<PostCreator />} />
-            <Route path="photoupload" element={<PhotoUpload />} />
-            <Route path="culture" element={<Culture />} />
-            <Route path="culturalgallery" element={<CulturalPhotoGallery />} />
-            <Route path="swipecard" element={<SwipeCard />} />
-            <Route path="cardcontent" element={<CardContent />} />
-            <Route path="recomended" element={<Recomended />} />
-          </Route>
+          {/* Standalone component routes */}
+          <Route path="/postcreator" element={<PostCreator />} />
+          <Route path="/photoupload" element={<PhotoUpload />} />
+          <Route path="/culture" element={<Culture />} />
+          <Route path="/culturalgallery" element={<CulturalPhotoGallery />} />
+          <Route path="/swipecard" element={<SwipeCard />} />
+          <Route path="/cardcontent" element={<CardContent />} />
+          <Route path="/recomended" element={<Recomended />} />
+        </Route>
 
-          {/* Auth routes */}
-          <Route path="login" element={<Login />} />
-          <Route path="register" element={<Register />} />
+        {/* Auth routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-          {/* Catch-all route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
-    </>
+        {/* Catch-all */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
   );
 }
 

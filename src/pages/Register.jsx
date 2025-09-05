@@ -1,5 +1,6 @@
 // Register.jsx
 import React, { useState } from "react";
+import axios from "axios";
 
 export default function Register() {
   const [username, setUsername] = useState("");
@@ -7,14 +8,29 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    console.log("Register:", { username, email, password });
-    // 🔥 API call goes here
+
+    try {
+      const res = await axios.post("http://localhost:5000/omnivibe/auth/register", {
+        username,
+        email,
+        password,
+      });
+
+      alert(res.data.message); // success msg from backend
+      console.log("✅ Register response:", res.data);
+
+      // Optionally redirect to login
+      window.location.href = "/login";
+    } catch (error) {
+      console.error("❌ Register error:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Registration failed!");
+    }
   };
 
   return (

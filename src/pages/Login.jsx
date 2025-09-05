@@ -1,15 +1,34 @@
 // Login.jsx
 import React, { useState } from "react";
+import axios from "axios";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login:", { username, email, password });
-    // 🔥 API call goes here
+
+    try {
+      const res = await axios.post("http://localhost:5000/omnivibe/auth/login", {
+        username,
+        email,
+        password,
+      });
+
+      alert(res.data.message); // ✅ "Login successful"
+      console.log("✅ Login response:", res.data);
+
+      // Store user info in localStorage
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      // Redirect after login
+      window.location.href = "/";
+    } catch (error) {
+      console.error("❌ Login error:", error.response?.data || error.message);
+      alert(error.response?.data?.message || "Login failed!");
+    }
   };
 
   return (
