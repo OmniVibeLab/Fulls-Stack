@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      class="notification-card bg-white shadow-md flex items-start space-x-4 p-4 rounded-xl border border-[#FF3C02] mb-3"
+    >
+      <% if (sender.avatar) { %>
+      <img
+        src="<%= sender.avatar %>"
+        alt="Avatar"
+        class="w-10 h-10 rounded-full object-cover"
+      />
+      <% } else { %>
+      <div
+        class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold"
+      >
+        <%= sender.username[0].toUpperCase() %>
+      </div>
+      <% } %>
+      <div class="flex-1">
+        <p class="text-[#FF3C02] font-semibold"><%= sender.username %></p>
+        <p>mentioned you: "<%= message %>"</p>
+        <% if (link) { %>
+        <a href="<%= link %>" class="text-[#FF3C02] hover:underline text-sm"
+          >View Post</a
+        >
+        <% } %>
+        <p class="text-gray-500 text-xs">
+          <%= new Date(createdAt).toLocaleString() %>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
